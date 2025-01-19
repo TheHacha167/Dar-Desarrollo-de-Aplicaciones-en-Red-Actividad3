@@ -94,6 +94,7 @@ fi
 echo ""
 
 
+
 provincias=$(echo "$nuevo_response2" | jq -r '.[]."Provincia"' | sort -u)
 
 
@@ -149,7 +150,6 @@ else
     nuevo_response4=$(echo "$nuevo_response3" | jq -s '.')
 fi
 echo ""
-
 
 
 localidades=$(echo "$nuevo_response4" | jq -r '.[]."Localidad"' | sort -u)
