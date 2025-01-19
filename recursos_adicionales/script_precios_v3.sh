@@ -27,6 +27,8 @@ if [[ -z "$response" ]]; then
     exit 1
 fi
 
+<< 'Comment'
+
 # Lista de carburantes
 carburantes=(
     "Biodiesel" "Bioetanol" "Gas Natural Comprimido" "Gas Natural Licuado"
@@ -47,7 +49,7 @@ echo ""
 # Preguntar al usuario por el carburante
 read -p "¿Quieres buscar un carburante específico? Escribe el nombre (o pulsa ENTER para no filtrar): " carburante_filtrado
 
-
+Comment
 
 # Convertir JSON a array de empresas
 empresas=$(echo "$response" | jq -r '.ListaEESSPrecio[]."Rótulo"' | sort -u)
