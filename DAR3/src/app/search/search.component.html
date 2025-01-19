@@ -1,18 +1,57 @@
-<h2>Buscar Gasolineras</h2>
-<form (ngSubmit)="searchGasStations()">
-  <label>Ubicación/Coordenadas/Código Postal</label>
-  <input type="text" [(ngModel)]="filters.location" name="location" />
+<h2>Filtrar Gasolineras</h2>
 
-  <label>Marca</label>
-  <input type="text" [(ngModel)]="filters.brand" name="brand" />
+<!-- Empresa (Rótulo) -->
+<label>Empresa:</label>
+<select [(ngModel)]="filters.empresa" (change)="applyFilters()">
+  <option value="">(Todas)</option>
+  <option *ngFor="let emp of empresas" [value]="emp">{{ emp }}</option>
+</select>
 
-  <label>Tipo de Carburante</label>
-  <select [(ngModel)]="filters.fuelType" name="fuelType">
-    <option value="">--Seleccionar--</option>
-    <option value="Gasolina 95">Gasolina 95</option>
-    <option value="Gasolina 98">Gasolina 98</option>
-    <option value="Diesel">Diesel</option>
-  </select>
+<!-- Carburante -->
+<label>Carburante:</label>
+<select [(ngModel)]="filters.carburante" (change)="applyFilters()">
+  <option value="">(Todos)</option>
+  <option *ngFor="let fuel of carburantes" [value]="fuel">{{ fuel }}</option>
+</select>
 
-  <button type="submit">Buscar</button>
-</form>
+<!-- Provincia -->
+<label>Provincia:</label>
+<select [(ngModel)]="filters.provincia" (change)="onChangeProvince(); applyFilters()">
+  <option value="">(Todas)</option>
+  <option *ngFor="let prov of provincias" [value]="prov">{{ prov }}</option>
+</select>
+
+<!-- Municipio -->
+<label>Municipio:</label>
+<select [(ngModel)]="filters.municipio" (change)="onChangeMunicipio(); applyFilters()">
+  <option value="">(Todos)</option>
+  <option *ngFor="let mun of municipios" [value]="mun">{{ mun }}</option>
+</select>
+
+<!-- Localidad -->
+<label>Localidad:</label>
+<select [(ngModel)]="filters.localidad" (change)="applyFilters()">
+  <option value="">(Todas)</option>
+  <option *ngFor="let loc of localidades" [value]="loc">{{ loc }}</option>
+</select>
+
+<hr>
+
+<button (click)="applyFilters()">Aplicar Filtros</button>
+
+<!-- Mostrar resultados filtrados en una tabla simple (opcional) -->
+<h3>Resultados ({{ filteredGasStations.length }}):</h3>
+<table>
+  <tr>
+    <th>Empresa</th>
+    <th>Provincia</th>
+    <th>Municipio</th>
+    <th>Localidad</th>
+  </tr>
+  <tr *ngFor="let station of filteredGasStations">
+    <td>{{ station['Rótulo'] }}</td>
+    <td>{{ station['Provincia'] }}</td>
+    <td>{{ station['Municipio'] }}</td>
+    <td>{{ station['Localidad'] }}</td>
+  </tr>
+</table>

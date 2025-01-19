@@ -1,15 +1,32 @@
-<header>
-  <nav>
-    <a routerLink="/home">Inicio</a> |
-    <a routerLink="/search">Buscar</a> |
-    <a routerLink="/about">Acerca de</a>
-  </nav>
-</header>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscador de Gasolineras</title>
+  <!-- Enlazar el archivo CSS principal -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-<main>
-  <router-outlet></router-outlet>
-</main>
+  <header>
+    <nav>
+      <a href="/home">Inicio</a> |
+      <a href="/search">Buscar</a> |
+      <a href="/about">Acerca de</a>
+    </nav>
+  </header>
 
-<footer>
-  <p>© 2023 - Proyecto DAR3</p>
-</footer>
+  <main>
+
+
+    <!-- Aquí se renderizará el contenido dependiendo de la ruta (Angular) -->
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer>
+    <p>© 2023 - Proyecto DAR3</p>
+  </footer>
+
+</body>
+</html>

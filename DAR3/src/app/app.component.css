@@ -1,0 +1,125 @@
+/* Estilos globales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    /* Fondo claro tirando a azul para el cuerpo */
+    background-color: #E3F2FD; 
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Encabezado con degradado azul */
+  header {
+    background: linear-gradient(90deg, #1565C0 0%, #42A5F5 100%);
+    color: #fff;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  }
+  
+  nav {
+    text-align: center;
+  }
+  
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0 15px;
+    font-size: 18px;
+    transition: color 0.3s ease;
+  }
+  
+  nav a:hover {
+    color: #ffeb3b; /* Un pequeño contraste al pasar el cursor */
+  }
+  
+  /* Contenido principal */
+  main {
+    padding: 20px;
+    min-height: 500px; /* Asegura espacio suficiente */
+  }
+  
+  /* Contenedor del buscador */
+  .search-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-container h2 {
+    color: #1565C0;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .search-container form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .search-container input[type="text"] {
+    flex: 1 1 60%;
+    min-width: 200px;
+    padding: 10px;
+    border: 2px solid #1565C0;
+    border-radius: 4px;
+    outline: none;
+    font-size: 16px;
+  }
+  
+  .search-container input[type="text"]:focus {
+    border-color: #42A5F5;
+  }
+  
+  .search-container button {
+    background-color: #1565C0;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .search-container button:hover {
+    background-color: #0d47a1; /* Tonalidad más oscura al hacer hover */
+  }
+  
+  /* Pie de página */
+  footer {
+    background-color: #1565C0;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  
+  /* Adaptación para pantallas pequeñas */
+  @media (max-width: 600px) {
+    nav a {
+      display: block;
+      margin: 10px 0;
+    }
+  
+    .search-container form {
+      flex-direction: column;
+    }
+  
+    .search-container input[type="text"] {
+      flex: 1 1 auto;
+      width: 100%;
+    }
+  }
