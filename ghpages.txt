@@ -1,0 +1,3 @@
+npm install -D angular-cli-ghpages
+ng build --output-path=dist/Dar-Desarrollo-de-Aplicaciones-en-Red-Actividad3 --base-href "https://thehacha167.github.io/Dar-Desarrollo-de-Aplicaciones-en-Red-Actividad3/"
+npx angular-cli-ghpages --dir=dist/Dar-Desarrollo-de-Aplicaciones-en-Red-Actividad3
