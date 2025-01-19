@@ -1,0 +1,18 @@
+<h2>Buscar Gasolineras</h2>
+<form (ngSubmit)="searchGasStations()">
+  <label>Ubicación/Coordenadas/Código Postal</label>
+  <input type="text" [(ngModel)]="filters.location" name="location" />
+
+  <label>Marca</label>
+  <input type="text" [(ngModel)]="filters.brand" name="brand" />
+
+  <label>Tipo de Carburante</label>
+  <select [(ngModel)]="filters.fuelType" name="fuelType">
+    <option value="">--Seleccionar--</option>
+    <option value="Gasolina 95">Gasolina 95</option>
+    <option value="Gasolina 98">Gasolina 98</option>
+    <option value="Diesel">Diesel</option>
+  </select>
+
+  <button type="submit">Buscar</button>
+</form>
