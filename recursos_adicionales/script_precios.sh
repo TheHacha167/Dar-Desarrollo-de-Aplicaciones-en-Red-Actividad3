@@ -118,10 +118,10 @@ provincias=$(echo "$nuevo_response2" | jq -r '.[]."Provincia"' | sort -u)
 echo "Lista de provincias:"
 echo "$provincias"
 
-read -p "Escribe la empresa que quieres filtrar: " provincia_filtrada
+read -p "Escribe la provincia que quieres filtrar: " provincia_filtrada
 
 
-# Filtrar el JSON si se ingresó una empresa
+# Filtrar el JSON si se ingresó una provincia
 if [[ -n "$provincia_filtrada" ]]; then
     nuevo_response3=$(echo "$nuevo_response2" | jq -r --arg provincia "$provincia_filtrada" \
         '.[] | select(."Provincia" == $provincia)')
@@ -145,12 +145,12 @@ municipios=$(echo "$nuevo_response3" | jq -r '.[]."Municipio"' | sort -u)
 
 
 echo "Lista de Municipios:"
-echo "$provincias"
+echo "$municipios"
 
-read -p "Escribe la empresa que quieres filtrar: " municipio_filtrado
+read -p "Escribe el municipio que quieres filtrar: " municipio_filtrado
 
 
-# Filtrar el JSON si se ingresó una empresa
+# Filtrar el JSON si se ingresó un municipio
 if [[ -n "$municipio_filtrado" ]]; then
     nuevo_response4=$(echo "$nuevo_response3" | jq -r --arg municipio "$municipio_filtrado" \
         '.[] | select(."Municipio" == $municipio)')
@@ -170,29 +170,29 @@ echo ""
 
 
 
-municipios=$(echo "$nuevo_response3" | jq -r '.[]."Municipio"' | sort -u)
+localidades=$(echo "$nuevo_response4" | jq -r '.[]."Localidad"' | sort -u)
 
 
 echo "Lista de Municipios:"
-echo "$provincias"
+echo "$localidades"
 
-read -p "Escribe la empresa que quieres filtrar: " municipio_filtrado
+read -p "Escribe la localidad que quieres filtrar: " localidad_filtrado
 
 
-# Filtrar el JSON si se ingresó una empresa
-if [[ -n "$municipio_filtrado" ]]; then
-    nuevo_response4=$(echo "$nuevo_response3" | jq -r --arg municipio "$municipio_filtrado" \
-        '.[] | select(."Municipio" == $municipio)')
-    if [[ -z "$nuevo_response4" ]]; then
-        echo "No se encontraron gasolineras para el municipio '$municipio_filtrado'. Manteniendo el JSON anterior. (No se imprime debido a su larga longitud)"
-        nuevo_response4=$(echo "$nuevo_response3" | jq -s '.')
+# Filtrar el JSON si se ingresó una localidad
+if [[ -n "$localidad_filtrado" ]]; then
+    nuevo_response5=$(echo "$nuevo_response4" | jq -r --arg localidad "$localidad_filtrado" \
+        '.[] | select(."Localidad" == $localidad)')
+    if [[ -z "$nuevo_response5" ]]; then
+        echo "No se encontraron gasolineras para la localidad '$localidad_filtrado'. Manteniendo el JSON anterior. (No se imprime debido a su larga longitud)"
+        nuevo_response5=$(echo "$nuevo_response4" | jq -s '.')
     else
-        echo "Gasolineras filtradas por el municipio '$municipio_filtrado':"
-        nuevo_response4=$(echo "$nuevo_response4" | jq -s '.')
-        echo "$nuevo_response4"
+        echo "Gasolineras filtradas por la localidad '$localidad_filtrado':"
+        nuevo_response5=$(echo "$nuevo_response5" | jq -s '.')
+        echo "$nuevo_response5"
     fi
 else
-    echo "No se ha filtrado por municipio. Manteniendo el JSON anterior. (No se imprime debido a su larga longitud)"
-    nuevo_response4=$(echo "$nuevo_response3" | jq -s '.')
+    echo "No se ha filtrado por localidad. Manteniendo el JSON anterior. (No se imprime debido a su larga longitud)"
+    nuevo_response5=$(echo "$nuevo_response4" | jq -s '.')
 fi
 echo ""
