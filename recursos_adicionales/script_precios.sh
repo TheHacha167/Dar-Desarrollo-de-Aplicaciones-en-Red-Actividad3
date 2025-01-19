@@ -34,24 +34,6 @@ response=$(curl -s "$API_URL_JSON" | iconv -f utf-8 -t utf-8 -c)
 empresas=$(echo "$response" | jq -r '.ListaEESSPrecio[]."Rótulo"' | sort -u)
 
 
-
-
-
-
-<< 'Comment'
-
-# Convertir la lista de carburantes a un array de Bash
-carburantes_array=($carburantes)
-
-# Mostrar los tipos de carburantes
-echo "Tipos de carburantes:"
-for carburante in "${carburantes_array[@]}"; do
-    echo "$carburante"
-done
-echo ""
-
-Comment
-
 # Mostrar los resultados de empresas
 echo "Lista de empresas:"
 echo "$empresas"
