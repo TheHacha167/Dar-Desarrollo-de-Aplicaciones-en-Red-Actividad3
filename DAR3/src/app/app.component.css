@@ -1,4 +1,4 @@
-/* Estilos globales */
+/* GLOBAL RESETS */
 * {
     margin: 0;
     padding: 0;
@@ -6,44 +6,45 @@
     font-family: Arial, sans-serif;
   }
   
+  html, body {
+    height: 100%;
+  }
+  
   body {
-    /* Fondo claro tirando a azul para el cuerpo */
-    background-color: #E3F2FD; 
+    background-color: #E3F2FD; /* Azul claro */
     color: #333;
     line-height: 1.6;
   }
   
-  /* Encabezado con degradado azul */
-  header {
-    background: linear-gradient(90deg, #1565C0 0%, #42A5F5 100%);
-    color: #fff;
-    padding: 15px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  /* Barra de navegación (mat-toolbar) */
+  .topbar {
+    display: flex;
+    align-items: center;
+    padding: 0 20px; /* separa el contenido de los bordes */
   }
   
-  nav {
-    text-align: center;
+  .brand {
+    font-size: 20px;
+    font-weight: bold;
   }
   
-  nav a {
-    color: #fff;
-    text-decoration: none;
-    padding: 0 15px;
-    font-size: 18px;
-    transition: color 0.3s ease;
+  .spacer {
+    flex: 1 1 auto;
   }
   
-  nav a:hover {
-    color: #ffeb3b; /* Un pequeño contraste al pasar el cursor */
-  }
-  
-  /* Contenido principal */
+  /* CONTENIDO PRINCIPAL */
   main {
+    min-height: calc(100vh - 64px - 60px); /* Ajustar a la altura de tu toolbar & footer */
     padding: 20px;
-    min-height: 500px; /* Asegura espacio suficiente */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #E3F2FD;
   }
   
-  /* Contenedor del buscador */
+  /* Tarjetas o contenedores de búsqueda */
   .search-container {
     max-width: 600px;
     margin: 20px auto;
@@ -51,36 +52,30 @@
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
   }
-  
   .search-container h2 {
     color: #1565C0;
     margin-bottom: 10px;
-    text-align: center;
   }
-  
   .search-container form {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
     gap: 10px;
     justify-content: center;
   }
-  
   .search-container input[type="text"] {
-    flex: 1 1 60%;
-    min-width: 200px;
+    width: 80%;
     padding: 10px;
     border: 2px solid #1565C0;
     border-radius: 4px;
     outline: none;
     font-size: 16px;
   }
-  
   .search-container input[type="text"]:focus {
     border-color: #42A5F5;
   }
-  
   .search-container button {
     background-color: #1565C0;
     color: #fff;
@@ -91,35 +86,24 @@
     border-radius: 4px;
     transition: background-color 0.3s ease;
   }
-  
   .search-container button:hover {
-    background-color: #0d47a1; /* Tonalidad más oscura al hacer hover */
+    background-color: #0d47a1;
   }
   
-  /* Pie de página */
+  /* FOOTER FIJO O NORMAL */
   footer {
-    background-color: #1565C0;
+    background: linear-gradient(90deg, #1565C0 0%, #42A5F5 100%);
     color: #fff;
     text-align: center;
     padding: 15px 0;
-    position: fixed;
+    position: fixed; /* ponlo en comentario si no deseas que sea fijo */
     width: 100%;
     bottom: 0;
   }
   
-  /* Adaptación para pantallas pequeñas */
+  /* RESPONSIVE */
   @media (max-width: 600px) {
-    nav a {
-      display: block;
-      margin: 10px 0;
-    }
-  
-    .search-container form {
-      flex-direction: column;
-    }
-  
     .search-container input[type="text"] {
-      flex: 1 1 auto;
-      width: 100%;
+      width: 90%;
     }
   }

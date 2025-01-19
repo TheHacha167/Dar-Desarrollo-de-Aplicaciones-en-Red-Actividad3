@@ -5,17 +5,16 @@ import { GasStationService } from '../services/gas-station.service';
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css'],
-  standalone : false
+  standalone: false 
 })
 export class SearchComponent implements OnInit {
 
   // Datos crudos (todas las gasolineras)
   allGasStations: any[] = [];
-
   // Datos filtrados (los que muestra la interfaz)
   filteredGasStations: any[] = [];
 
-  // Catálogos únicos extraídos de `allGasStations`
+  // Catálogos únicos
   empresas: string[] = [];
   carburantes: string[] = [];
   provincias: string[] = [];
@@ -31,36 +30,117 @@ export class SearchComponent implements OnInit {
     localidad: ''
   };
 
+  // Controla si ya hemos descargado la info
+  dataLoaded = false;
+  // Controla si estamos cargando datos (para mostrar spinner)
+  isLoading = false;
+
+  // Coordenadas del usuario
+  userLat: number | null = null;
+  userLng: number | null = null;
+
   constructor(private gasStationService: GasStationService) { }
 
   ngOnInit(): void {
-    // Al iniciar el componente, cargamos toda la data de gasolineras
+    // Al iniciar el componente, cargamos las gasolineras automáticamente
+    this.loadAllGasStations();
+  }
+
+  /**
+   * Descarga la lista de gasolineras y construye catálogos
+   */
+  loadAllGasStations(): void {
+    this.isLoading = true; // Encendemos el spinner
     this.gasStationService.getGasStations().subscribe({
       next: (data: any[]) => {
+        // Guardamos la lista completa
         this.allGasStations = data;
-        // Copiamos como filtrado inicial (sin filtros)
-        this.filteredGasStations = data;
+        this.filteredGasStations = data; // Sin filtros inicialmente
 
-        // Generamos catálogos:
+        // Generar catálogos
         this.empresas = this.getUniqueValues(data, 'Rótulo');
         this.provincias = this.getUniqueValues(data, 'Provincia');
         this.municipios = this.getUniqueValues(data, 'Municipio');
         this.localidades = this.getUniqueValues(data, 'Localidad');
-        
-        // Extraer lista de carburantes:
-        // En la API, los carburantes vienen en propiedades como 'Precio Gasolina 95 E5',
-        // 'Precio Gasolina 98 E5', 'Precio Gasoleo A', etc.
-        // Podemos tomar las keys que empiecen por 'Precio '
         this.carburantes = this.extractCarburantes(data[0]);
+
+        this.dataLoaded = true;
+        this.isLoading = false; // Apagamos el spinner
       },
       error: (err) => {
         console.error('Error al obtener estaciones de servicio: ', err);
+        this.isLoading = false;
       }
     });
   }
 
   /**
-   * Extrae los valores únicos para una propiedad dada (por ejemplo, 'Rótulo').
+   * Pide al navegador la ubicación del usuario
+   */
+  getUserLocation(): void {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.userLat = position.coords.latitude;
+          this.userLng = position.coords.longitude;
+          console.log('Ubicación del usuario:', this.userLat, this.userLng);
+
+          // Una vez tengamos la ubicación, podemos calcular las distancias
+          this.calculateDistances();
+        },
+        (error) => {
+          console.error('Error al obtener geolocalización:', error);
+        },
+        { enableHighAccuracy: true }
+      );
+    } else {
+      console.warn('Geolocalización no soportada por el navegador');
+    }
+  }
+
+  /**
+   * Calcula la distancia de cada gasolinera a la posición del usuario,
+   * guardándola en station.distanceToUser. Luego ordena la lista por distancia.
+   */
+  calculateDistances(): void {
+    if (this.userLat == null || this.userLng == null) return;
+
+    this.allGasStations.forEach(st => {
+      // Ajusta la obtención de lat/long según la API
+      // (a veces vienen con comas, a veces en otras propiedades)
+      const stationLat = parseFloat(st['Latitud'].replace(',', '.'));
+      const stationLng = parseFloat(st['Longitud (WGS84)'].replace(',', '.'));
+
+      // Llamada a un método de GasStationService que calcule la distancia
+      // Suponiendo que has implementado "calculateDistance" (Haversine) en tu servicio
+      const dist = this.gasStationService.calculateDistance(
+        this.userLat!, this.userLng!, stationLat, stationLng
+      );
+      st.distanceToUser = dist;
+    });
+
+    // Ordenar gasolineras por distancia
+    this.allGasStations.sort((a, b) => a.distanceToUser - b.distanceToUser);
+    // Actualizar la lista filtrada
+    this.filteredGasStations = [...this.allGasStations];
+  }
+
+  /**
+   * Filtra las gasolineras que estén dentro de un radio X (km) respecto al usuario
+   */
+  filterByRadius(km: number): void {
+    if (this.userLat == null || this.userLng == null) {
+      alert('Primero obtén tu ubicación.');
+      return;
+    }
+    this.filteredGasStations = this.allGasStations.filter(st => {
+      // Solo mostrar aquellas con distanceToUser <= km
+      return st.distanceToUser !== undefined && st.distanceToUser <= km;
+    });
+  }
+
+  /**
+   * Extrae valores únicos de una propiedad (p.e. 'Rótulo')
    */
   getUniqueValues(arrayData: any[], property: string): string[] {
     const values = arrayData.map(item => item[property]?.trim() || '');
@@ -69,7 +149,7 @@ export class SearchComponent implements OnInit {
   }
 
   /**
-   * Como en el script, detectamos las keys que empiezan por "Precio "
+   * Detectar claves que empiecen por "Precio "
    */
   extractCarburantes(oneStation: any): string[] {
     if (!oneStation) return [];
@@ -80,55 +160,51 @@ export class SearchComponent implements OnInit {
   }
 
   /**
-   * Aplica filtros en memoria, similar a cómo lo hace tu script con jq.
+   * Aplica los filtros en memoria (empresa, provincia, municipio, carburante, etc.)
    */
   applyFilters(): void {
     this.filteredGasStations = this.allGasStations.filter(st => {
-      
-      // Filtra por empresa (Rótulo), si está seleccionado
+
+      // Filtro: empresa
       if (this.filters.empresa && st['Rótulo'] !== this.filters.empresa) {
         return false;
       }
-      // Filtra por provincia
+      // Filtro: provincia
       if (this.filters.provincia && st['Provincia'] !== this.filters.provincia) {
         return false;
       }
-      // Filtra por municipio
+      // Filtro: municipio
       if (this.filters.municipio && st['Municipio'] !== this.filters.municipio) {
         return false;
       }
-      // Filtra por localidad
+      // Filtro: localidad
       if (this.filters.localidad && st['Localidad'] !== this.filters.localidad) {
         return false;
       }
-      // Filtra por carburante
-      // Ej: st["Precio Gasolina 95 E5"] ? -> se revisa que exista la clave
+      // Filtro: carburante
       if (this.filters.carburante) {
         const precioKey = 'Precio ' + this.filters.carburante;
-        // Opcional: si quieres excluir las que no tengan ese carburante, comprueba si la key existe:
         if (!st.hasOwnProperty(precioKey)) {
           return false;
         }
       }
-      
-      return true; // Si pasa todos los filtros, se incluye
+      return true;
     });
+
+    // Si ya tenemos las distancias calculadas (userLat, userLng), mantenemos el orden por distancia
+    if (this.userLat != null && this.userLng != null) {
+      this.filteredGasStations.sort((a, b) => (a.distanceToUser || 0) - (b.distanceToUser || 0));
+    }
   }
 
-  /**
-   * Evento al cambiar provincia -> recarga los municipios correspondientes, etc.
-   * (Opcional) Si prefieres repoblar combos en cascada.
-   */
+  // Manejo en cascada: Provincia -> Municipios -> Localidades
   onChangeProvince(): void {
-    // Filtra allGasStations para los que coincidan con la provincia
-    // y saca municipios únicos
     if (this.filters.provincia) {
       const filtered = this.allGasStations.filter(st => st.Provincia === this.filters.provincia);
       this.municipios = this.getUniqueValues(filtered, 'Municipio');
     } else {
       this.municipios = this.getUniqueValues(this.allGasStations, 'Municipio');
     }
-    // Reseteamos el municipio y localidad seleccionados
     this.filters.municipio = '';
     this.filters.localidad = '';
     this.onChangeMunicipio();
@@ -139,7 +215,6 @@ export class SearchComponent implements OnInit {
       const filtered = this.allGasStations.filter(st => st.Municipio === this.filters.municipio);
       this.localidades = this.getUniqueValues(filtered, 'Localidad');
     } else {
-      // sino, las localidades se basan en toda la provincia
       if (this.filters.provincia) {
         const filteredProvince = this.allGasStations.filter(st => st.Provincia === this.filters.provincia);
         this.localidades = this.getUniqueValues(filteredProvince, 'Localidad');
@@ -149,5 +224,4 @@ export class SearchComponent implements OnInit {
     }
     this.filters.localidad = '';
   }
-
 }

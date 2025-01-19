@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buscador de Gasolineras</title>
-  <!-- Enlazar el archivo CSS principal -->
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-  <header>
-    <nav>
-      <a href="/home">Inicio</a> |
-      <a href="/search">Buscar</a> |
-      <a href="/about">Acerca de</a>
-    </nav>
-  </header>
-
-  <main>
-
-
-    <!-- Aquí se renderizará el contenido dependiendo de la ruta (Angular) -->
-    <router-outlet></router-outlet>
-  </main>
-
-  <footer>
-    <p>© 2023 - Proyecto DAR3</p>
-  </footer>
-
-</body>
-</html>
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Buscador de Gasolineras</title>
+    <link rel="stylesheet" href="app.component.css" />
+  </head>
+  <body>
+  
+    <!-- Barra de navegación con Material -->
+    <mat-toolbar color="primary" class="topbar">
+      <!-- Nombre de la app o logo -->
+      <span class="brand">Proyecto DAR3</span>
+    
+      <!-- Espaciador flexible: empuja el resto de contenido a la derecha -->
+      <span class="spacer"></span>
+    
+      <!-- Botones del menú -->
+      <button mat-button routerLink="/home">Inicio</button>
+      <button mat-button routerLink="/search">Buscar</button>
+      <button mat-button routerLink="/about">Acerca de</button>
+    </mat-toolbar>
+    
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+    
+    <footer>© 2023 - Proyecto DAR3</footer>
+  </body>
+  </html>

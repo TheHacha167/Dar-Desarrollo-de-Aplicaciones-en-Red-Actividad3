@@ -1,57 +1,63 @@
 <h2>Filtrar Gasolineras</h2>
 
-<!-- Empresa (Rótulo) -->
-<label>Empresa:</label>
-<select [(ngModel)]="filters.empresa" (change)="applyFilters()">
-  <option value="">(Todas)</option>
-  <option *ngFor="let emp of empresas" [value]="emp">{{ emp }}</option>
-</select>
+<!-- Spinner: se muestra mientras isLoading = true -->
+<div *ngIf="isLoading" style="margin: 1em 0;">
+  <p>Cargando gasolineras...</p>
+  <!-- Si usas Angular Material, puedes usar <mat-spinner></mat-spinner> -->
+  <div class="spinner"></div>
+</div>
 
-<!-- Carburante -->
-<label>Carburante:</label>
-<select [(ngModel)]="filters.carburante" (change)="applyFilters()">
-  <option value="">(Todos)</option>
-  <option *ngFor="let fuel of carburantes" [value]="fuel">{{ fuel }}</option>
-</select>
+<!-- Si ya se cargaron los datos y NO estamos cargando, mostramos el formulario -->
+<div *ngIf="dataLoaded && !isLoading">
+  <label>Empresa: </label>
+  <select [(ngModel)]="filters.empresa" (change)="applyFilters()">
+    <option value="">(Todas)</option>
+    <option *ngFor="let emp of empresas" [value]="emp">{{ emp }}</option>
+  </select>
 
-<!-- Provincia -->
-<label>Provincia:</label>
-<select [(ngModel)]="filters.provincia" (change)="onChangeProvince(); applyFilters()">
-  <option value="">(Todas)</option>
-  <option *ngFor="let prov of provincias" [value]="prov">{{ prov }}</option>
-</select>
+  <label>Carburante: </label>
+  <select [(ngModel)]="filters.carburante" (change)="applyFilters()">
+    <option value="">(Todos)</option>
+    <option *ngFor="let fuel of carburantes" [value]="fuel">{{ fuel }}</option>
+  </select>
 
-<!-- Municipio -->
-<label>Municipio:</label>
-<select [(ngModel)]="filters.municipio" (change)="onChangeMunicipio(); applyFilters()">
-  <option value="">(Todos)</option>
-  <option *ngFor="let mun of municipios" [value]="mun">{{ mun }}</option>
-</select>
+  <label>Provincia: </label>
+  <select [(ngModel)]="filters.provincia" (change)="onChangeProvince(); applyFilters()">
+    <option value="">(Todas)</option>
+    <option *ngFor="let prov of provincias" [value]="prov">{{ prov }}</option>
+  </select>
 
-<!-- Localidad -->
-<label>Localidad:</label>
-<select [(ngModel)]="filters.localidad" (change)="applyFilters()">
-  <option value="">(Todas)</option>
-  <option *ngFor="let loc of localidades" [value]="loc">{{ loc }}</option>
-</select>
+  <label>Municipio: </label>
+  <select [(ngModel)]="filters.municipio" (change)="onChangeMunicipio(); applyFilters()">
+    <option value="">(Todos)</option>
+    <option *ngFor="let mun of municipios" [value]="mun">{{ mun }}</option>
+  </select>
 
-<hr>
+  <label>Localidad: </label>
+  <select [(ngModel)]="filters.localidad" (change)="applyFilters()">
+    <option value="">(Todas)</option>
+    <option *ngFor="let loc of localidades" [value]="loc">{{ loc }}</option>
+  </select>
 
-<button (click)="applyFilters()">Aplicar Filtros</button>
+  <hr>
+  <button (click)="applyFilters()">Aplicar Filtros</button>
 
-<!-- Mostrar resultados filtrados en una tabla simple (opcional) -->
-<h3>Resultados ({{ filteredGasStations.length }}):</h3>
-<table>
-  <tr>
-    <th>Empresa</th>
-    <th>Provincia</th>
-    <th>Municipio</th>
-    <th>Localidad</th>
-  </tr>
-  <tr *ngFor="let station of filteredGasStations">
-    <td>{{ station['Rótulo'] }}</td>
-    <td>{{ station['Provincia'] }}</td>
-    <td>{{ station['Municipio'] }}</td>
-    <td>{{ station['Localidad'] }}</td>
-  </tr>
-</table>
+  <h3>Resultados ({{ filteredGasStations.length }}):</h3>
+  <table>
+    <tr>
+      <th>Empresa</th>
+      <th>Provincia</th>
+      <th>Municipio</th>
+      <th>Localidad</th>
+      <th>Distancia (km)</th> <!-- Nuevo -->
+    </tr>
+    <tr *ngFor="let station of filteredGasStations">
+      <td>{{ station['Rótulo'] }}</td>
+      <td>{{ station['Provincia'] }}</td>
+      <td>{{ station['Municipio'] }}</td>
+      <td>{{ station['Localidad'] }}</td>
+      <!-- Distancia calculada, con 1-2 decimales -->
+      <td>{{ station.distanceToUser | number:'1.2-2' }}</td>
+    </tr>
+  </table>
+</div>
