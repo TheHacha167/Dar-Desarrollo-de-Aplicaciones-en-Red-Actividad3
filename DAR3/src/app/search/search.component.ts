@@ -120,6 +120,11 @@ export class SearchComponent implements OnInit {
     this.allGasStations.sort((a, b) => a.distanceToUser - b.distanceToUser);
     // Actualizar la lista filtrada
     this.filteredGasStations = [...this.allGasStations];
+
+      // Filtrar las gasolineras a menos de 10 km
+      this.filterByRadius(10);
+
+
   }
 
   /**
