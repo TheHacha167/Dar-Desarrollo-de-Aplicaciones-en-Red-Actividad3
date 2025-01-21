@@ -90,11 +90,12 @@ export class SearchComponent implements OnInit {
         },
         (error) => {
           console.error('Error al obtener geolocalización:', error);
+          alert('No se pudo obtener la ubicación. Por favor, verifica los permisos de tu navegador.');
         },
         { enableHighAccuracy: true }
       );
     } else {
-      console.warn('Geolocalización no soportada por el navegador');
+      alert('Geolocalización no soportada por este navegador.');
     }
   }
 
@@ -106,13 +107,9 @@ export class SearchComponent implements OnInit {
     if (this.userLat == null || this.userLng == null) return;
 
     this.allGasStations.forEach(st => {
-      // Ajusta la obtención de lat/long según la API
-      // (a veces vienen con comas, a veces en otras propiedades)
       const stationLat = parseFloat(st['Latitud'].replace(',', '.'));
       const stationLng = parseFloat(st['Longitud (WGS84)'].replace(',', '.'));
 
-      // Llamada a un método de GasStationService que calcule la distancia
-      // Suponiendo que has implementado "calculateDistance" (Haversine) en tu servicio
       const dist = this.gasStationService.calculateDistance(
         this.userLat!, this.userLng!, stationLat, stationLng
       );
@@ -134,7 +131,6 @@ export class SearchComponent implements OnInit {
       return;
     }
     this.filteredGasStations = this.allGasStations.filter(st => {
-      // Solo mostrar aquellas con distanceToUser <= km
       return st.distanceToUser !== undefined && st.distanceToUser <= km;
     });
   }
@@ -164,24 +160,18 @@ export class SearchComponent implements OnInit {
    */
   applyFilters(): void {
     this.filteredGasStations = this.allGasStations.filter(st => {
-
-      // Filtro: empresa
       if (this.filters.empresa && st['Rótulo'] !== this.filters.empresa) {
         return false;
       }
-      // Filtro: provincia
       if (this.filters.provincia && st['Provincia'] !== this.filters.provincia) {
         return false;
       }
-      // Filtro: municipio
       if (this.filters.municipio && st['Municipio'] !== this.filters.municipio) {
         return false;
       }
-      // Filtro: localidad
       if (this.filters.localidad && st['Localidad'] !== this.filters.localidad) {
         return false;
       }
-      // Filtro: carburante
       if (this.filters.carburante) {
         const precioKey = 'Precio ' + this.filters.carburante;
         if (!st.hasOwnProperty(precioKey)) {
@@ -191,13 +181,11 @@ export class SearchComponent implements OnInit {
       return true;
     });
 
-    // Si ya tenemos las distancias calculadas (userLat, userLng), mantenemos el orden por distancia
     if (this.userLat != null && this.userLng != null) {
       this.filteredGasStations.sort((a, b) => (a.distanceToUser || 0) - (b.distanceToUser || 0));
     }
   }
 
-  // Manejo en cascada: Provincia -> Municipios -> Localidades
   onChangeProvince(): void {
     if (this.filters.provincia) {
       const filtered = this.allGasStations.filter(st => st.Provincia === this.filters.provincia);

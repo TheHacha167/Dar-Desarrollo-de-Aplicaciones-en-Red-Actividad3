@@ -7,8 +7,14 @@
   <div class="spinner"></div>
 </div>
 
-<!-- Si ya se cargaron los datos y NO estamos cargando, mostramos el formulario -->
-<div *ngIf="dataLoaded && !isLoading">
+<!-- Solicitar localización del usuario -->
+<div *ngIf="!userLat || !userLng">
+  <p>Es necesario acceder a tu ubicación para calcular las distancias a las gasolineras.</p>
+  <button (click)="getUserLocation()">Obtener mi ubicación</button>
+</div>
+
+<!-- Si ya se cargaron los datos y tenemos la ubicación -->
+<div *ngIf="dataLoaded && !isLoading && userLat && userLng">
   <label>Empresa: </label>
   <select [(ngModel)]="filters.empresa" (change)="applyFilters()">
     <option value="">(Todas)</option>
