@@ -16,33 +16,38 @@
 <!-- Si ya se cargaron los datos y tenemos la ubicación -->
 <div *ngIf="dataLoaded && !isLoading && userLat && userLng">
   <label>Empresa: </label>
-  <select [(ngModel)]="filters.empresa" (change)="applyFilters()">
+  <select [(ngModel)]="filters.empresa" (change)="onChangeEmpresa(); applyFilters()">
     <option value="">(Todas)</option>
     <option *ngFor="let emp of empresas" [value]="emp">{{ emp }}</option>
+    <option *ngIf="empresas.length === 0" disabled>No hay empresas disponibles</option>
   </select>
 
   <label>Carburante: </label>
   <select [(ngModel)]="filters.carburante" (change)="applyFilters()">
     <option value="">(Todos)</option>
     <option *ngFor="let fuel of carburantes" [value]="fuel">{{ fuel }}</option>
+    <option *ngIf="carburantes.length === 0" disabled>No hay carburantes disponibles</option>
   </select>
 
   <label>Provincia: </label>
   <select [(ngModel)]="filters.provincia" (change)="onChangeProvince(); applyFilters()">
     <option value="">(Todas)</option>
     <option *ngFor="let prov of provincias" [value]="prov">{{ prov }}</option>
+    <option *ngIf="provincias.length === 0" disabled>No hay provincias disponibles</option>
   </select>
 
   <label>Municipio: </label>
   <select [(ngModel)]="filters.municipio" (change)="onChangeMunicipio(); applyFilters()">
     <option value="">(Todos)</option>
     <option *ngFor="let mun of municipios" [value]="mun">{{ mun }}</option>
+    <option *ngIf="municipios.length === 0" disabled>No hay municipios disponibles</option>
   </select>
 
   <label>Localidad: </label>
   <select [(ngModel)]="filters.localidad" (change)="applyFilters()">
     <option value="">(Todas)</option>
     <option *ngFor="let loc of localidades" [value]="loc">{{ loc }}</option>
+    <option *ngIf="localidades.length === 0" disabled>No hay localidades disponibles</option>
   </select>
 
   <hr>

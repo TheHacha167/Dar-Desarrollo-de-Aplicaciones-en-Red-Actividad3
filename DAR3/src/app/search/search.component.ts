@@ -163,58 +163,118 @@ export class SearchComponent implements OnInit {
   /**
    * Aplica los filtros en memoria (empresa, provincia, municipio, carburante, etc.)
    */
-  applyFilters(): void {
-    this.filteredGasStations = this.allGasStations.filter(st => {
-      if (this.filters.empresa && st['Rótulo'] !== this.filters.empresa) {
-        return false;
-      }
-      if (this.filters.provincia && st['Provincia'] !== this.filters.provincia) {
-        return false;
-      }
-      if (this.filters.municipio && st['Municipio'] !== this.filters.municipio) {
-        return false;
-      }
-      if (this.filters.localidad && st['Localidad'] !== this.filters.localidad) {
-        return false;
-      }
-      if (this.filters.carburante) {
-        const precioKey = 'Precio ' + this.filters.carburante;
-        if (!st.hasOwnProperty(precioKey)) {
-          return false;
+      applyFilters(): void {
+        this.filteredGasStations = this.allGasStations.filter(st => {
+          if (this.filters.empresa && st['Rótulo'] !== this.filters.empresa) {
+            return false;
+          }
+          if (this.filters.provincia && st['Provincia'] !== this.filters.provincia) {
+            return false;
+          }
+          if (this.filters.municipio && st['Municipio'] !== this.filters.municipio) {
+            return false;
+          }
+          if (this.filters.localidad && st['Localidad'] !== this.filters.localidad) {
+            return false;
+          }
+          if (this.filters.carburante) {
+            const precioKey = 'Precio ' + this.filters.carburante;
+            if (!st.hasOwnProperty(precioKey)) {
+              return false;
+            }
+          }
+          return true;
+        });
+      
+        // Actualizar las listas desplegables
+        if (this.filters.empresa) {
+          const filteredByEmpresa = this.filteredGasStations.filter(st => st['Rótulo'] === this.filters.empresa);
+      
+          // Actualizar provincias, municipios y localidades
+          this.provincias = this.getUniqueValues(filteredByEmpresa, 'Provincia');
+          this.municipios = this.getUniqueValues(filteredByEmpresa, 'Municipio');
+          this.localidades = this.getUniqueValues(filteredByEmpresa, 'Localidad');
+        } else {
+          // Si no hay empresa seleccionada, mostrar opciones según otros filtros
+          if (this.filters.provincia) {
+            const filteredByProvince = this.filteredGasStations.filter(st => st.Provincia === this.filters.provincia);
+            this.municipios = this.getUniqueValues(filteredByProvince, 'Municipio');
+          } else {
+            this.municipios = this.getUniqueValues(this.filteredGasStations, 'Municipio');
+          }
+      
+          if (this.filters.municipio) {
+            const filteredByMunicipio = this.filteredGasStations.filter(st => st.Municipio === this.filters.municipio);
+            this.localidades = this.getUniqueValues(filteredByMunicipio, 'Localidad');
+          } else {
+            this.localidades = this.getUniqueValues(this.filteredGasStations, 'Localidad');
+          }
         }
       }
-      return true;
-    });
+      
 
-    if (this.userLat != null && this.userLng != null) {
-      this.filteredGasStations.sort((a, b) => (a.distanceToUser || 0) - (b.distanceToUser || 0));
+  
+    onChangeEmpresa(): void {
+      if (this.filters.empresa) {
+        // Filtrar gasolineras por la empresa seleccionada
+        const filteredByEmpresa = this.allGasStations.filter(st => st['Rótulo'] === this.filters.empresa);
+    
+        // Generar provincias, municipios y localidades únicas con gasolineras de la empresa
+        this.provincias = this.getUniqueValues(filteredByEmpresa, 'Provincia');
+        this.municipios = this.getUniqueValues(filteredByEmpresa, 'Municipio');
+        this.localidades = this.getUniqueValues(filteredByEmpresa, 'Localidad');
+      } else {
+        // Si no hay empresa seleccionada, mostrar todas las opciones
+        this.provincias = this.getUniqueValues(this.allGasStations, 'Provincia');
+        this.municipios = this.getUniqueValues(this.allGasStations, 'Municipio');
+        this.localidades = this.getUniqueValues(this.allGasStations, 'Localidad');
+      }
+    
+      // Limpiar los filtros dependientes
+      this.filters.provincia = '';
+      this.filters.municipio = '';
+      this.filters.localidad = '';
+      this.applyFilters(); // Aplicar los filtros actualizados
     }
-  }
 
   onChangeProvince(): void {
     if (this.filters.provincia) {
-      const filtered = this.allGasStations.filter(st => st.Provincia === this.filters.provincia);
-      this.municipios = this.getUniqueValues(filtered, 'Municipio');
+      // Filtrar gasolineras por la provincia seleccionada
+      const filteredByProvince = this.allGasStations.filter(st => st.Provincia === this.filters.provincia);
+  
+      // Generar municipios únicos con gasolineras
+      this.municipios = this.getUniqueValues(filteredByProvince, 'Municipio');
     } else {
+      // Si no hay provincia seleccionada, mostramos todos los municipios
       this.municipios = this.getUniqueValues(this.allGasStations, 'Municipio');
     }
+  
+    // Limpiar los valores dependientes
     this.filters.municipio = '';
     this.filters.localidad = '';
-    this.onChangeMunicipio();
+    this.localidades = [];
+    this.applyFilters(); // Aplicar los filtros actualizados
   }
 
-  onChangeMunicipio(): void {
-    if (this.filters.municipio) {
-      const filtered = this.allGasStations.filter(st => st.Municipio === this.filters.municipio);
-      this.localidades = this.getUniqueValues(filtered, 'Localidad');
-    } else {
-      if (this.filters.provincia) {
-        const filteredProvince = this.allGasStations.filter(st => st.Provincia === this.filters.provincia);
-        this.localidades = this.getUniqueValues(filteredProvince, 'Localidad');
+    onChangeMunicipio(): void {
+      if (this.filters.municipio) {
+        // Filtrar gasolineras por el municipio seleccionado
+        const filteredByMunicipio = this.allGasStations.filter(st => st.Municipio === this.filters.municipio);
+    
+        // Generar localidades únicas con gasolineras
+        this.localidades = this.getUniqueValues(filteredByMunicipio, 'Localidad');
+      } else if (this.filters.provincia) {
+        // Si hay una provincia seleccionada pero no un municipio,
+        // mostramos las localidades de la provincia
+        const filteredByProvince = this.allGasStations.filter(st => st.Provincia === this.filters.provincia);
+        this.localidades = this.getUniqueValues(filteredByProvince, 'Localidad');
       } else {
+        // Si no hay filtros, mostramos todas las localidades
         this.localidades = this.getUniqueValues(this.allGasStations, 'Localidad');
       }
-    }
-    this.filters.localidad = '';
-  }
+    
+      // Limpiar el valor del filtro localidad
+      this.filters.localidad = '';
+      this.applyFilters(); // Aplicar los filtros actualizados
+    }    
 }
