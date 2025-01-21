@@ -17,8 +17,8 @@ const routes: Routes = [
   { path: 'results', component: ResultsComponent },
   { path: 'station/:id', component: StationDetailComponent },
   { path: 'about', component: AboutComponent },
-  // Ruta comodín para 404
-  { path: '**', component: PageNotFoundComponent },
+  // Redirige cualquier ruta no encontrada a /home
+  { path: '**', redirectTo: '/home', pathMatch: 'full' },
 ];
 
 @NgModule({
