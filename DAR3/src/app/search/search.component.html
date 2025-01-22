@@ -24,9 +24,9 @@
 
   <label>Carburante: </label>
   <select [(ngModel)]="filters.carburante" (change)="applyFilters()">
-    <option value="">(Todos)</option>
+    <!-- <option value="">(Todos)</option> -->
     <option *ngFor="let fuel of carburantes" [value]="fuel">{{ fuel }}</option>
-    <option *ngIf="carburantes.length === 0" disabled>No hay carburantes disponibles</option>
+    <!-- <option *ngIf="carburantes.length === 0" disabled>No hay carburantes disponibles</option> -->
   </select>
 
   <label>Provincia: </label>
@@ -57,6 +57,7 @@
   <table>
     <tr>
       <th>Empresa</th>
+      <th>Precio Carburante</th>
       <th>Provincia</th>
       <th>Municipio</th>
       <th>Localidad</th>
@@ -64,6 +65,13 @@
     </tr>
     <tr *ngFor="let station of filteredGasStations">
       <td>{{ station['Rótulo'] }}</td>
+      <td>
+        {{ 
+          station['Precio ' + filters.carburante]
+            ? station['Precio ' + filters.carburante] + ' €/L'
+            : 'N/D' 
+        }}
+      </td>
       <td>{{ station['Provincia'] }}</td>
       <td>{{ station['Municipio'] }}</td>
       <td>{{ station['Localidad'] }}</td>

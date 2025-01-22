@@ -62,7 +62,11 @@ export class SearchComponent implements OnInit {
         this.provincias = this.getUniqueValues(data, 'Provincia');
         this.municipios = this.getUniqueValues(data, 'Municipio');
         this.localidades = this.getUniqueValues(data, 'Localidad');
-        this.carburantes = this.extractCarburantes(data[0]);
+        this.carburantes = this.extractCarburantes(data[0]);  // Extraer carburantes dinámicamente
+
+        // Establecer carburante por defecto y aplicar filtros iniciales
+        this.filters.carburante = 'Gasolina 95 E5';
+        this.applyFilters();
 
         this.dataLoaded = true;
         this.isLoading = false; // Apagamos el spinner
@@ -163,7 +167,7 @@ export class SearchComponent implements OnInit {
   /**
    * Aplica los filtros en memoria (empresa, provincia, municipio, carburante, etc.)
    */
-      applyFilters(): void {
+      /*applyFilters(): void {
         this.filteredGasStations = this.allGasStations.filter(st => {
           if (this.filters.empresa && st['Rótulo'] !== this.filters.empresa) {
             return false;
@@ -210,7 +214,124 @@ export class SearchComponent implements OnInit {
             this.localidades = this.getUniqueValues(this.filteredGasStations, 'Localidad');
           }
         }
-      }
+      }*/
+
+        /*applyFilters(): void {
+          // Filtrar las gasolineras globalmente
+          this.filteredGasStations = this.allGasStations.filter(st => {
+            if (this.filters.empresa && st['Rótulo'] !== this.filters.empresa) {
+              return false;
+            }
+            if (this.filters.provincia && st['Provincia'] !== this.filters.provincia) {
+              return false;
+            }
+            if (this.filters.municipio && st['Municipio'] !== this.filters.municipio) {
+              return false;
+            }
+            if (this.filters.localidad && st['Localidad'] !== this.filters.localidad) {
+              return false;
+            }
+            if (this.filters.carburante) {
+              const precioKey = 'Precio ' + this.filters.carburante;
+              if (!st.hasOwnProperty(precioKey)) {
+                return false;
+              }
+            }
+            return true;
+          });
+
+            // Siempre limitar resultados a 10 km
+            this.filteredGasStations = this.filteredGasStations.filter(st => st.distanceToUser <= 10);
+
+        
+          // Actualizar las listas desplegables dinámicamente
+          this.updateDropdownOptions();
+        }*/
+
+          applyFilters(): void {
+            const carburanteKey = this.filters.carburante ? 'Precio ' + this.filters.carburante : null;
+          
+            // Determinar si hay otros filtros activos además de carburante
+            const isFiltered =
+              this.filters.empresa ||
+              this.filters.provincia ||
+              this.filters.municipio ||
+              this.filters.localidad;
+          
+            // Filtrar gasolineras según los filtros seleccionados
+            this.filteredGasStations = this.allGasStations.filter(st => {
+              if (this.filters.empresa && st['Rótulo'] !== this.filters.empresa) {
+                return false;
+              }
+              if (this.filters.provincia && st['Provincia'] !== this.filters.provincia) {
+                return false;
+              }
+              if (this.filters.municipio && st['Municipio'] !== this.filters.municipio) {
+                return false;
+              }
+              if (this.filters.localidad && st['Localidad'] !== this.filters.localidad) {
+                return false;
+              }
+              if (carburanteKey && !st.hasOwnProperty(carburanteKey)) {
+                return false;
+              }
+              return true;
+            });
+          
+            // Lógica contextual basada en los filtros aplicados
+            if (!isFiltered && carburanteKey) {
+              // Si solo se está filtrando por carburante, limitar a 10 km
+              this.filteredGasStations = this.filteredGasStations.filter(st => st.distanceToUser <= 10);
+            } else if (isFiltered) {
+              // Si hay otros filtros activos, limitar a las 20 más cercanas
+              this.filteredGasStations = this.filteredGasStations
+                .sort((a, b) => a.distanceToUser - b.distanceToUser) // Ordenar por distancia
+                .slice(0, 20); // Tomar las primeras 20
+            }
+          
+            // Actualizar las listas desplegables dinámicas
+            this.updateDropdownOptions();
+          }
+          
+        
+        updateDropdownOptions(): void {
+          if (this.filters.empresa) {
+            const filteredByEmpresa = this.filteredGasStations.filter(st => st['Rótulo'] === this.filters.empresa);
+        
+            this.provincias = this.getUniqueValues(filteredByEmpresa, 'Provincia');
+            this.municipios = this.getUniqueValues(filteredByEmpresa, 'Municipio');
+            this.localidades = this.getUniqueValues(filteredByEmpresa, 'Localidad');
+          } else {
+            if (this.filters.provincia) {
+              const filteredByProvince = this.filteredGasStations.filter(st => st['Provincia'] === this.filters.provincia);
+              this.municipios = this.getUniqueValues(filteredByProvince, 'Municipio');
+            } else {
+              this.municipios = this.getUniqueValues(this.filteredGasStations, 'Municipio');
+            }
+        
+            if (this.filters.municipio) {
+              const filteredByMunicipio = this.filteredGasStations.filter(st => st['Municipio'] === this.filters.municipio);
+              this.localidades = this.getUniqueValues(filteredByMunicipio, 'Localidad');
+            } else {
+              this.localidades = this.getUniqueValues(this.filteredGasStations, 'Localidad');
+            }
+          }
+        }
+        
+        onChangeCarburante(): void {
+          // Filtrar por carburante únicamente sobre el resultado actual
+          const carburanteKey = 'Precio ' + this.filters.carburante;
+          if (this.filters.carburante) {
+            this.filteredGasStations = this.filteredGasStations.filter(st =>
+              st.hasOwnProperty(carburanteKey)
+            );
+          }
+
+          // Volver a limitar los resultados a los 10 km
+          this.filteredGasStations = this.filteredGasStations.filter(st => st.distanceToUser <= 10);
+
+        }
+        
       
 
   
