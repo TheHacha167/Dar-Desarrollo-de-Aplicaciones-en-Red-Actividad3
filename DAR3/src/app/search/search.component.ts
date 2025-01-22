@@ -164,6 +164,20 @@ export class SearchComponent implements OnInit {
       .sort();
   }
 
+  resetFilters(): void {
+    // Restablecer todos los filtros excepto carburante
+    this.filters = {
+      empresa: '',
+      provincia: '',
+      municipio: '',
+      localidad: '',
+      carburante: this.filters.carburante // Mantener el carburante actual
+    };
+  
+    // Volver a aplicar los filtros (considerando el estado inicial)
+    this.applyFilters();
+  }
+
   /**
    * Aplica los filtros en memoria (empresa, provincia, municipio, carburante, etc.)
    */

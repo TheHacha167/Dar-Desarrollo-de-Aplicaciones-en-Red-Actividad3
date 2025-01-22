@@ -15,6 +15,10 @@
 
 <!-- Si ya se cargaron los datos y tenemos la ubicación -->
 <div *ngIf="dataLoaded && !isLoading && userLat && userLng">
+  <div>
+    <button (click)="resetFilters()">Resetear Filtros</button>
+  </div>
+
   <label>Empresa: </label>
   <select [(ngModel)]="filters.empresa" (change)="onChangeEmpresa(); applyFilters()">
     <option value="">(Todas)</option>
