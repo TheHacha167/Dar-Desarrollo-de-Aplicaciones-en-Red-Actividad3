@@ -224,29 +224,43 @@ export class SearchComponent implements OnInit {
 }
           
     
-    updateDropdownOptions(): void {
-      if (this.filters.empresa) {
-        const filteredByEmpresa = this.filteredGasStations.filter(st => st['Rótulo'] === this.filters.empresa);
-    
-        this.provincias = this.getUniqueValues(filteredByEmpresa, 'Provincia');
-        this.municipios = this.getUniqueValues(filteredByEmpresa, 'Municipio');
-        this.localidades = this.getUniqueValues(filteredByEmpresa, 'Localidad');
+updateDropdownOptions(): void {
+  const isOnlyCarburanteActive =
+    this.filters.carburante && 
+    !this.filters.empresa &&
+    !this.filters.provincia &&
+    !this.filters.municipio &&
+    !this.filters.localidad;
+
+  if (isOnlyCarburanteActive) {
+    // Si solo el carburante está activo, usa todos los datos disponibles
+    this.municipios = this.getUniqueValues(this.allGasStations, 'Municipio');
+    this.localidades = this.getUniqueValues(this.allGasStations, 'Localidad');
+  } else {
+    if (this.filters.empresa) {
+      const filteredByEmpresa = this.filteredGasStations.filter(st => st['Rótulo'] === this.filters.empresa);
+
+      this.provincias = this.getUniqueValues(filteredByEmpresa, 'Provincia');
+      this.municipios = this.getUniqueValues(filteredByEmpresa, 'Municipio');
+      this.localidades = this.getUniqueValues(filteredByEmpresa, 'Localidad');
+    } else {
+      if (this.filters.provincia) {
+        const filteredByProvince = this.filteredGasStations.filter(st => st['Provincia'] === this.filters.provincia);
+        this.municipios = this.getUniqueValues(filteredByProvince, 'Municipio');
       } else {
-        if (this.filters.provincia) {
-          const filteredByProvince = this.filteredGasStations.filter(st => st['Provincia'] === this.filters.provincia);
-          this.municipios = this.getUniqueValues(filteredByProvince, 'Municipio');
-        } else {
-          this.municipios = this.getUniqueValues(this.filteredGasStations, 'Municipio');
-        }
-    
-        if (this.filters.municipio) {
-          const filteredByMunicipio = this.filteredGasStations.filter(st => st['Municipio'] === this.filters.municipio);
-          this.localidades = this.getUniqueValues(filteredByMunicipio, 'Localidad');
-        } else {
-          this.localidades = this.getUniqueValues(this.filteredGasStations, 'Localidad');
-        }
+        this.municipios = this.getUniqueValues(this.filteredGasStations, 'Municipio');
+      }
+
+      if (this.filters.municipio) {
+        const filteredByMunicipio = this.filteredGasStations.filter(st => st['Municipio'] === this.filters.municipio);
+        this.localidades = this.getUniqueValues(filteredByMunicipio, 'Localidad');
+      } else {
+        this.localidades = this.getUniqueValues(this.filteredGasStations, 'Localidad');
       }
     }
+  }
+}
+
     
     onChangeCarburante(): void {
       // Filtrar por carburante únicamente sobre el resultado actual
