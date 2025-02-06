@@ -12,12 +12,17 @@ body {
     line-height: 1.6;
 }
 
-/* Encabezado con degradado azul */
+/* HEADER */
 header {
     background: linear-gradient(90deg, #1565C0 0%, #42A5F5 100%);
     color: #fff;
     padding: 15px 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 nav {
@@ -40,12 +45,16 @@ nav a:hover {
 main {
     padding: 20px;
     min-height: 500px; /* Asegura espacio suficiente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 120px); /* Ajuste dinámico */
 }
 
 /* Estilos para el contenedor del home */
 .home-container {
     max-width: 600px;
-    margin: 50px auto;
+    width: 90%;
     background-color: #fff;
     border-radius: 8px;
     padding: 30px;
@@ -63,6 +72,7 @@ main {
     margin-bottom: 20px;
 }
 
+/* Centrar botón */
 .home-container .btn-primary {
     background-color: #1565C0;
     color: #fff;
@@ -78,15 +88,16 @@ main {
     background-color: #0d47a1; /* Tonalidad más oscura al hacer hover */
 }
 
-/* Pie de página */
+/* FOOTER */
 footer {
-    background-color: #1565C0;
+    background: linear-gradient(90deg, #1565C0 0%, #42A5F5 100%);
     color: #fff;
     text-align: center;
     padding: 15px 0;
-    position: fixed;
     width: 100%;
+    position: fixed;
     bottom: 0;
+    left: 0;
 }
 
 /* Adaptación para pantallas pequeñas */

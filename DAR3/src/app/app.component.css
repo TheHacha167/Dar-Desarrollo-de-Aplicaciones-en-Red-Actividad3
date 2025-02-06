@@ -1,109 +1,83 @@
 /* GLOBAL RESETS */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
-  
-  html, body {
-    height: 100%;
-  }
-  
-  body {
-    background-color: #E3F2FD; /* Azul claro */
-    color: #333;
-    line-height: 1.6;
-  }
-  
-  /* Barra de navegación (mat-toolbar) */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: #E3F2FD;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Barra de navegación */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #1565C0; /* Azul más intenso */
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.brand-container {
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Botones de navegación */
+.nav-links {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-links button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.nav-links button:hover {
+  color: #B3E5FC; /* Azul claro */
+}
+
+/* FOOTER */
+footer {
+  background: linear-gradient(90deg, #1565C0 0%, #42A5F5 100%);
+  color: #fff;
+  text-align: center;
+  padding: 15px 0;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
   .topbar {
-    display: flex;
-    align-items: center;
-    padding: 0 20px; /* separa el contenido de los bordes */
-  }
-  
-  .brand {
-    font-size: 20px;
-    font-weight: bold;
-  }
-  
-  .spacer {
-    flex: 1 1 auto;
-  }
-  
-  /* CONTENIDO PRINCIPAL */
-  main {
-    min-height: calc(100vh - 64px - 60px); /* Ajustar a la altura de tu toolbar & footer */
-    padding: 20px;
-    text-align: center;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #E3F2FD;
-  }
-  
-  /* Tarjetas o contenedores de búsqueda */
-  .search-container {
-    max-width: 600px;
-    margin: 20px auto;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    padding: 15px;
   }
-  .search-container h2 {
-    color: #1565C0;
-    margin-bottom: 10px;
-  }
-  .search-container form {
-    display: flex;
+
+  .nav-links {
     flex-direction: column;
-    align-items: center;
     gap: 10px;
-    justify-content: center;
+    margin-top: 10px;
   }
-  .search-container input[type="text"] {
-    width: 80%;
-    padding: 10px;
-    border: 2px solid #1565C0;
-    border-radius: 4px;
-    outline: none;
-    font-size: 16px;
-  }
-  .search-container input[type="text"]:focus {
-    border-color: #42A5F5;
-  }
-  .search-container button {
-    background-color: #1565C0;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  .search-container button:hover {
-    background-color: #0d47a1;
-  }
-  
-  /* FOOTER FIJO O NORMAL */
-  footer {
-    background: linear-gradient(90deg, #1565C0 0%, #42A5F5 100%);
-    color: #fff;
-    text-align: center;
-    padding: 15px 0;
-    position: fixed; /* ponlo en comentario si no deseas que sea fijo */
-    width: 100%;
-    bottom: 0;
-  }
-  
-  /* RESPONSIVE */
-  @media (max-width: 600px) {
-    .search-container input[type="text"] {
-      width: 90%;
-    }
-  }
+}
