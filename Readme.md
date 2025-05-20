@@ -46,7 +46,7 @@ this.http.get<any>(this.API_URL_JSON)
 - Integración de geolocalización para obtener la ubicación automáticamente.  
 - Manejo de errores en la carga de datos.  
 
-## 🧪 Pruebas realizadas
+## 🧪 Pruebas Realizadas
 - **Pruebas unitarias:** Herramientas como Jasmine y Karma.  
 - **Pruebas de integración:** Validación de la interacción entre componentes y la API.  
 - **Pruebas de usuario:** Verificación manual para asegurar la usabilidad y correcta visualización.  
